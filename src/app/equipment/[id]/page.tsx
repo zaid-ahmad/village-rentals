@@ -1,5 +1,6 @@
 import DropDown from "@/components/dropdown";
 import Navbar from "@/components/navbar";
+import { FaPlus } from "react-icons/fa6";
 
 export default function IndividualEquipment({
     params,
