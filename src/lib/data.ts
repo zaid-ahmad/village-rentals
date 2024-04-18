@@ -39,6 +39,11 @@ export async function getEquipments() {
                         description: true,
                     },
                 },
+                rentals: {
+                    include: {
+                        customer: true,
+                    },
+                },
             },
         });
         return data;
@@ -110,20 +115,44 @@ export async function getRentals() {
     }
 }
 
-export async function returnRental(rentalId: number) {
+export async function returnRental(rentalId: number): Promise<void> {
     try {
-        const updatedRental = await prisma.rental.update({
+        const rental = await prisma.rental.findUnique({
+            where: {
+                id: rentalId,
+            },
+            include: {
+                equipment: true,
+            },
+        });
+
+        if (!rental || !rental.equipment) {
+            throw new Error(
+                "Rental not found or equipment not associated with rental"
+            );
+        }
+
+        const rentalDuration = Math.max(
+            1,
+            Math.ceil(
+                (new Date().getTime() - rental.rentalDate.getTime()) /
+                    (1000 * 3600 * 24)
+            )
+        );
+
+        const totalCost = rental.equipment.dailyRentalCost * rentalDuration;
+
+        await prisma.rental.update({
             where: {
                 id: rentalId,
             },
             data: {
                 returnDate: new Date(),
+                cost: totalCost,
             },
         });
 
         revalidatePath("/your-rentals");
-
-        return updatedRental;
     } catch (error) {
         console.error("Error returning rental:", error);
         throw error;

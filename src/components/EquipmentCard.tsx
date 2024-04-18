@@ -13,6 +13,7 @@ interface IEquipmentCard {
     category: string;
     description: string;
     price: number;
+    rented: boolean;
 }
 
 const EquipmentCard: React.FC<IEquipmentCard> = ({
@@ -21,6 +22,7 @@ const EquipmentCard: React.FC<IEquipmentCard> = ({
     category,
     description,
     price,
+    rented,
 }: IEquipmentCard) => {
     const { isAdmin } = useAdminContext();
 
@@ -43,10 +45,19 @@ const EquipmentCard: React.FC<IEquipmentCard> = ({
 
             <p className='flex-grow'>{description}</p>
 
-            <div className='mt-auto flex items-center justify-between'>
-                <div className='flex font-bold text-xl'>
-                    <span>$</span>
-                    <h3>{price}</h3>
+            <div
+                className={`mt-auto flex items-center justify-between ${
+                    !rented ? "gap-5" : ""
+                }`}
+            >
+                <div className='flex flex-col gap-1'>
+                    <p className='text-xs font-medium text-slate-800'>
+                        Daily rate
+                    </p>
+                    <div className='flex font-bold text-xl'>
+                        <span>$</span>
+                        <h3>{price}</h3>
+                    </div>
                 </div>
 
                 {isAdmin ? (
@@ -66,7 +77,7 @@ const EquipmentCard: React.FC<IEquipmentCard> = ({
                             <p className='font-medium'>Delete</p>
                         </button>
                     </div>
-                ) : (
+                ) : !rented ? (
                     <button
                         onClick={handleRent}
                         className='flex items-center justify-between gap-1 border-2 border-slate-800 rounded py-2 px-5 transition hover:bg-slate-100 hover:border-slate-500 hover:text-slate-700'
@@ -74,6 +85,10 @@ const EquipmentCard: React.FC<IEquipmentCard> = ({
                         <FaPlus />
                         <p className='pl-3 font-medium'>Rent</p>
                     </button>
+                ) : (
+                    <p className='text-sm w-1/2 text-center'>
+                        You have rented this equipment.
+                    </p>
                 )}
             </div>
         </div>

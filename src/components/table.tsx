@@ -63,10 +63,13 @@ const Table = ({ customers }: { customers: any[] }) => {
                                     {customer.firstName} {customer.lastName}
                                 </td>
                                 <td className='px-6 py-4'>
-                                    {formatDate(rental.rentalDate)}
+                                    {rental.rentalDate &&
+                                        formatDate(rental.rentalDate)}
                                 </td>
                                 <td className='px-6 py-4'>
-                                    {formatDate(rental.returnDate) || "N/A"}
+                                    {(rental.returnDate &&
+                                        formatDate(rental.returnDate)) ||
+                                        "N/A"}
                                 </td>
                                 <td className='px-6 py-4'>${rental.cost}</td>
                                 <td className='px-6 py-4 font-medium'>

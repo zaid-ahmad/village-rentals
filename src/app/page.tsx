@@ -20,6 +20,9 @@ export default async function Home() {
                             category={equipment.category.description}
                             description={equipment.description}
                             price={equipment.dailyRentalCost}
+                            rented={equipment.rentals.some(
+                                (rental) => rental.returnDate === null
+                            )}
                         />
                     ))}
                 </section>
