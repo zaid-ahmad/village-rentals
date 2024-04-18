@@ -1,6 +1,6 @@
 "use client";
 
-import { banCustomer, unbanCustomer } from "@/lib/data";
+import { banCustomer, unbanCustomer } from "@/lib/actions";
 import { FaBan } from "react-icons/fa";
 
 const Table = ({ customers }: { customers: any[] }) => {

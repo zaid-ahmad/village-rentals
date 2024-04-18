@@ -1,6 +1,6 @@
 "use client";
 
-import { createCategory } from "@/lib/data";
+import { createCategory } from "@/lib/actions";
 import { useState } from "react";
 
 interface NewCategoryFormProps {

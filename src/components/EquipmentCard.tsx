@@ -1,7 +1,7 @@
 "use client";
 
 import { useAdminContext } from "@/app/context/context-provider";
-import { createRental, deleteEquipment } from "@/lib/data";
+import { createRental, deleteEquipment } from "@/lib/actions";
 import Link from "next/link";
 import React from "react";
 import { FaPlus } from "react-icons/fa6";

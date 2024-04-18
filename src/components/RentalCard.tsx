@@ -1,6 +1,6 @@
 "use client";
 
-import { returnRental } from "@/lib/data";
+import { returnRental } from "@/lib/actions";
 import React from "react";
 import { IoIosReturnLeft } from "react-icons/io";
 
