@@ -5,7 +5,6 @@ import { getEquipments } from "@/lib/data";
 
 export default async function Home() {
     const equipments = await getEquipments();
-    console.log(equipments);
     return (
         <>
             <Navbar />
@@ -16,6 +15,7 @@ export default async function Home() {
                     {equipments.map((equipment) => (
                         <EquipmentCard
                             key={equipment.id}
+                            id={equipment.id}
                             name={equipment.name}
                             category={equipment.category.description}
                             description={equipment.description}

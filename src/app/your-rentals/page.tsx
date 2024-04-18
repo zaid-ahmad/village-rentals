@@ -1,7 +1,10 @@
 import RentalCard from "@/components/RentalCard";
 import Navbar from "@/components/navbar";
+import { getRentals } from "@/lib/data";
 
-export default function YourRentals() {
+export default async function YourRentals() {
+    const rentals = await getRentals();
+
     return (
         <>
             <Navbar />
@@ -9,14 +12,18 @@ export default function YourRentals() {
                 <h2 className='pt-7 font-medium text-xl'>Your rentals</h2>
 
                 <section className='grid grid-cols-4 gap-5 pt-5'>
-                    <RentalCard
-                        name='Cordless Drill'
-                        category='Power Tools'
-                        description='High-powered cordless drill with 20V lithium-ion battery and keyless chuck.'
-                        price={15}
-                        rentedOn={new Date()}
-                        returnDate={new Date()}
-                    />
+                    {rentals.map((rental) => (
+                        <RentalCard
+                            key={rental.id}
+                            id={rental.id}
+                            name={rental.equipment.name}
+                            category={rental.equipment.category.description}
+                            description={rental.equipment.description}
+                            price={rental.cost}
+                            rentedOn={rental.rentalDate}
+                            returnDate={rental.returnDate}
+                        />
+                    ))}
                 </section>
             </div>
         </>

@@ -1,16 +1,21 @@
+"use client";
+
+import { returnRental } from "@/lib/data";
 import React from "react";
 import { IoIosReturnLeft } from "react-icons/io";
 
 interface IRentalCard {
+    id: number;
     name: string;
     category: string;
     description: string;
     price: number;
     rentedOn: Date;
-    returnDate: Date;
+    returnDate: Date | null;
 }
 
 const RentalCard: React.FC<IRentalCard> = ({
+    id,
     name,
     category,
     description,
@@ -25,6 +30,14 @@ const RentalCard: React.FC<IRentalCard> = ({
 
         return `${month}/${day}/${year}`;
     }
+
+    const handleReturn = async () => {
+        try {
+            await returnRental(id);
+        } catch (error) {
+            console.error("Error returning equipment:", error);
+        }
+    };
 
     return (
         <div className='max-w-sm shadow p-5 rounded flex flex-col gap-4'>
@@ -57,18 +70,23 @@ const RentalCard: React.FC<IRentalCard> = ({
                         Return Date
                     </p>
                     <p className='text-sm font-medium'>
-                        {formatDate(returnDate)}
+                        {returnDate ? formatDate(returnDate) : "-"}
                     </p>
                 </div>
             </div>
 
             <div>
-                <button className='w-full flex items-center justify-center gap-1 border-2 border-slate-800 rounded py-2 px-5 transition hover:bg-slate-100 hover:border-slate-500 hover:text-slate-700'>
-                    <p className='pl-3 font-medium'>Return</p>
-                    <div className='text-2xl'>
-                        <IoIosReturnLeft />
-                    </div>
-                </button>
+                {!returnDate && (
+                    <button
+                        onClick={handleReturn}
+                        className='w-full flex items-center justify-center gap-1 border-2 border-slate-800 rounded py-2 px-5 transition hover:bg-slate-100 hover:border-slate-500 hover:text-slate-700'
+                    >
+                        <p className='pl-3 font-medium'>Return</p>
+                        <div className='text-2xl'>
+                            <IoIosReturnLeft />
+                        </div>
+                    </button>
+                )}
             </div>
         </div>
     );

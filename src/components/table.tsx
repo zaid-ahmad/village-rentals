@@ -1,7 +1,17 @@
+"use client";
+
+import { banCustomer, unbanCustomer } from "@/lib/data";
 import { FaBan } from "react-icons/fa";
 
-const Table = () => {
-    let status = "returned";
+const Table = ({ customers }: { customers: any[] }) => {
+    function formatDate(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        return `${month}/${day}/${year}`;
+    }
+
     return (
         <div className='relative overflow-x-auto shadow sm:rounded-lg'>
             <table className='w-full text-sm text-left rtl:text-right text-gray-500'>
@@ -34,37 +44,64 @@ const Table = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr className='bg-white border-b'>
-                        <th
-                            scope='row'
-                            className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'
-                        >
-                            1234
-                        </th>
-                        <td className='px-6 py-4'>Concrete Mixer</td>
-                        <td className='px-6 py-4'>Zaid Ahmad</td>
-                        <td className='px-6 py-4'>03/03/2023</td>
-                        <td className='px-6 py-4'>12/02/2024</td>
-                        <td className='px-6 py-4'>
-                            $<span>60</span>
-                        </td>
-                        <td className='px-6 py-4 font-medium'>
-                            {status === "returned" ? (
-                                <p className='text-green-600'>Returned</p>
-                            ) : status === "to be returned" ? (
-                                <p className='text-yellow-600'>
-                                    To be returned
-                                </p>
-                            ) : (
-                                <p className='text-red-600'>Not returned</p>
-                            )}
-                        </td>
-                        <td className='px-6 py-4 text-red-600'>
-                            <button>
-                                <FaBan />
-                            </button>
-                        </td>
-                    </tr>
+                    {customers.map((customer: any) =>
+                        customer.rentals.map((rental: any, index: any) => (
+                            <tr
+                                key={`${customer.id}-${index}`}
+                                className='bg-white border-b'
+                            >
+                                <th
+                                    scope='row'
+                                    className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'
+                                >
+                                    {customer.id}
+                                </th>
+                                <td className='px-6 py-4'>
+                                    {rental.equipment.name}
+                                </td>
+                                <td className='px-6 py-4'>
+                                    {customer.firstName} {customer.lastName}
+                                </td>
+                                <td className='px-6 py-4'>
+                                    {formatDate(rental.rentalDate)}
+                                </td>
+                                <td className='px-6 py-4'>
+                                    {formatDate(rental.returnDate) || "N/A"}
+                                </td>
+                                <td className='px-6 py-4'>${rental.cost}</td>
+                                <td className='px-6 py-4 font-medium'>
+                                    {rental.returnDate ? (
+                                        <p className='text-green-600'>
+                                            Returned
+                                        </p>
+                                    ) : (
+                                        <p className='text-yellow-600'>
+                                            To be returned
+                                        </p>
+                                    )}
+                                </td>
+                                <td className='px-6 py-4 text-red-600'>
+                                    {customer.banned ? (
+                                        <button
+                                            onClick={() =>
+                                                unbanCustomer(customer.id)
+                                            }
+                                        >
+                                            Unban
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() =>
+                                                banCustomer(customer.id)
+                                            }
+                                        >
+                                            <FaBan />
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

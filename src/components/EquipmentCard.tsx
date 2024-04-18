@@ -1,12 +1,14 @@
 "use client";
 
 import { useAdminContext } from "@/app/context/context-provider";
+import { createRental, deleteEquipment } from "@/lib/data";
 import Link from "next/link";
 import React from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
 
 interface IEquipmentCard {
+    id: number;
     name: string;
     category: string;
     description: string;
@@ -14,43 +16,61 @@ interface IEquipmentCard {
 }
 
 const EquipmentCard: React.FC<IEquipmentCard> = ({
+    id,
     name,
     category,
     description,
     price,
 }: IEquipmentCard) => {
     const { isAdmin } = useAdminContext();
+
+    const handleRent = async () => {
+        try {
+            await createRental(id, price);
+            alert("Equipment rented!");
+        } catch (error) {
+            alert("You are banned from renting equipment.");
+            console.error("Error creating rental:", error);
+        }
+    };
+
     return (
-        <div className='max-w-sm shadow p-5 rounded flex flex-col gap-4'>
+        <div className='max-w-sm shadow p-5 rounded flex flex-col h-full gap-5'>
             <div>
                 <h2 className='text-lg font-semibold'>{name}</h2>
                 <p className='text-xs'>{category}</p>
             </div>
 
-            <p>{description}</p>
+            <p className='flex-grow'>{description}</p>
 
-            <div className='flex items-center justify-between'>
+            <div className='mt-auto flex items-center justify-between'>
                 <div className='flex font-bold text-xl'>
                     <span>$</span>
                     <h3>{price}</h3>
                 </div>
 
                 {isAdmin ? (
-                    <>
+                    <div className='flex items-center gap-2 '>
                         <Link
-                            href={`/equipment/${1}`}
-                            className='flex items-center justify-between gap-1 border-2 border-slate-800 rounded py-2 px-5 transition hover:bg-slate-100 hover:border-slate-500 hover:text-slate-700'
+                            href={`/equipment/${id}`}
+                            className='flex items-center justify-between gap-1 border-2 text-sm border-slate-800 rounded py-1 px-3 transition hover:bg-slate-100 hover:border-slate-500 hover:text-slate-700'
                         >
                             <MdEdit />
-                            <p className='pl-3 font-medium'>Edit</p>
+                            <p className='font-medium'>Edit</p>
                         </Link>
-                        <button className='flex items-center justify-between gap-1 border-2 border-slate-800 rounded py-2 px-5 transition hover:bg-slate-100 hover:border-slate-500 hover:text-slate-700'>
+                        <button
+                            onClick={() => deleteEquipment(id)}
+                            className='flex items-center justify-between gap-1 border-2 text-sm border-slate-800 rounded py-1 px-3 transition hover:bg-slate-100 hover:border-slate-500 hover:text-slate-700'
+                        >
                             <MdDelete />
-                            <p className='pl-3 font-medium'>Delete</p>
+                            <p className='font-medium'>Delete</p>
                         </button>
-                    </>
+                    </div>
                 ) : (
-                    <button className='flex items-center justify-between gap-1 border-2 border-slate-800 rounded py-2 px-5 transition hover:bg-slate-100 hover:border-slate-500 hover:text-slate-700'>
+                    <button
+                        onClick={handleRent}
+                        className='flex items-center justify-between gap-1 border-2 border-slate-800 rounded py-2 px-5 transition hover:bg-slate-100 hover:border-slate-500 hover:text-slate-700'
+                    >
                         <FaPlus />
                         <p className='pl-3 font-medium'>Rent</p>
                     </button>
