@@ -1,6 +1,6 @@
 "use client";
 
-import { createEquipment } from "@/lib/data";
+import { createEquipment } from "@/lib/actions";
 import { useState } from "react";
 import Dropdown from "./dropdown";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { updateEquipmentInfo } from "@/lib/data";
+import { updateEquipmentInfo } from "@/lib/actions";
 import { useState } from "react";
 import Dropdown from "./dropdown";
 

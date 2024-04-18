@@ -1,6 +1,6 @@
 "use client";
 
-import { updateAccountInfo } from "@/lib/data";
+import { updateAccountInfo } from "@/lib/actions";
 import { useState } from "react";
 
 interface AccountInfo {
